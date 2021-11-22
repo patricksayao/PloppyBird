@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>ploppy bord</title>
+
+        <style text="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body{
+        	background-color:black;
+        }
+        #container{
+        	background: url('images/background.png');
+            background-position: -45px -462px;
+        	width:900px;
+        	height:500px;
+            position:fixed;
+        }
+        #bird {
+            background: url('images/bird1.gif');
+            background-size: contain;
+            width:100px;
+        	height:100px;
+            position: absolute;
+        }
+        .top-pipe1, .bottom-pipe1{
+            background: url('images/mariopipe2.png');
+            width:140px;
+            position: absolute;
+            background-position: 0px -494px;
+        }
+        .top-pipe1{
+            transform: rotate(180deg);
+            top: 0px;
+        }
+        .bottom-pipe1{
+            height: 450px;
+        }
+
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div id="top-pipes"></div>
+            <div id="bird" style='top:25px; left:45px;'></div>
+            <div id="bottom-pipes"></div>
+        </div>
+
+        <script type="text/javascript">
+
+            function getRandom(min, max) {
+                return Math.floor(Math.random() * (max - min + 1) + min);
+            }
+
+            let bird ={
+                top: 25,
+                left: 45
+            }
+
+            let top_pipes = [{    // used to have two elements but it was too hard to play the game
+                left: 560,
+        		height: getRandom(50, 340)
+        	}]
+
+            let bottom_pipes = [{ // 275
+                left: 250,
+        		top: getRandom(100, 350)
+        	},{
+                left: 900,
+        		top: getRandom(250, 300)
+        	}]
+
+            function dropBird(){
+                if (bird.top < 400){
+                    bird.top += 20;
+                }
+            }
+
+            function displayBird(){
+        		document.getElementById('bird').style['top'] = bird.top + "px";
+        	}
+            function displayTopPipes(){
+                // let output = '';
+                // for (let i =0; i < top_pipes.length; i++){
+                //     output += "<div class='top-pipe1' style='left:"+top_pipes[i].left+"px; height:"+top_pipes[i].height+"px;'></div>"
+                // }
+                // I removed the for the loop since the top_pipes list has only one element, you can add some if you want but add some pipes first!
+                let output = "<div class='top-pipe1' style='left:"+top_pipes[0].left+"px; height:"+top_pipes[0].height+"px;'></div>"
+                document.getElementById('top-pipes').innerHTML = output;
+
+            }
+            function displayBottomPipes(){
+                let output = '';
+                for (let j =0; j < bottom_pipes.length; j++){
+                    output += "<div class='bottom-pipe1' style='left:"+bottom_pipes[j].left+"px; top:"+bottom_pipes[j].top+"px;'></div>"
+                }
+                document.getElementById('bottom-pipes').innerHTML = output;
+            }
+
+            function movePipes(){
+                for (let i = 0; i < top_pipes.length; i++) {
+        			top_pipes[i].left -= 20;
+        			if (top_pipes[i].left < -120){
+        				top_pipes[i].left = 800;
+        				top_pipes[i].height = getRandom(50, 280)
+        				// detectCollision();
+        			}
+        		}
+        		for (let i = 0; i < bottom_pipes.length; i++) {
+        			bottom_pipes[i].left -= 20;
+        			if (bottom_pipes[i].left < -120){
+        				bottom_pipes[i].left = 800;
+        				bottom_pipes[i].top = getRandom(50, 280)
+        				// detectCollision();
+        			}
+        		}
+            }
+
+            document.addEventListener("click", function(){
+                console.log('click');
+                if (bird.top > 1){
+                    bird.top -=40;
+                }
+            });
+
+            // function detectCollision(){
+            //     // for (let i = 0; i < top_pipes.length; i++){
+            //     //     (bird.left > top_pipes[0].left - 150 && bird.left < top_pipes[0].left + 50 ){
+            //     //         console.log("ouch");
+            //     //     }
+            //     // }
+            //     // I removed the for the loop since the top_pipes list has only one element, you can add some if you want but add some pipes first!
+            //     // if (Math.abs(bird.left - top_pipes[0].left) < 20 && Math.abs(bird.top - top_pipes[0].height) < 10){ //&& Math.abs(bird.top - top_pipes[0].height) < 10
+            //     //     console.log("ouch");
+            //     // }
+            //
+            //     for (let i = 0; i < bottom_pipes.length; i++){
+            //         if (Math.abs(bird.left > bottom_pipes[i].left) < 10 && Math.abs(bird.top - bottom_pipes[i].top) < 10){
+            //             console.log("wtf");
+            //         }
+            //     }
+            // }
+
+            function gameLoop(){
+                displayTopPipes();
+                displayBottomPipes();
+                displayBird();
+                dropBird();
+                movePipes();
+                // detectCollision();
+            }
+
+            setInterval(gameLoop, 200);
+
+        </script>
+    </body>
+</html>
